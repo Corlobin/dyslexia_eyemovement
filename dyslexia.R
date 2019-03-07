@@ -22,9 +22,14 @@ for (i in 1:length(pessoas)) {
     
     dados_right = subset(dados_movimentos, select = c("RX", "RY", "trial", "T"))
     names(dados_right) <- c("x", "y", "trial", "time")
+    fixations_right = detect.fixations(dados_right)
+    
+    
     dados_left  = subset(dados_movimentos, select = c("LX", "LY", "trial", "T"))
     names(dados_left) <- c("x", "y", "trial", "time")
-    
+    fixations_left = detect.fixations(dados_right)
+    diagnostic.plot(dados_left, fixations_left)    
+
   }
 }
 
