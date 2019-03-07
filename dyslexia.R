@@ -2,12 +2,13 @@ library(saccades)
 
 rm(list=ls())
 
-path = "C:\\Users\\Ricardo\\Google Drive\\Mestrado IFES\\Dislexia Movimentos Oculares\\Recording Data"
+path = "C:\\Users\\Ricardo\\Google Drive\\Mestrado IFES\\Dislexia Movimentos Oculares\\dyslexia_eyemovement\\Recording Data"
 setwd(path)
 
 pessoas <- list.files(path = path, pattern = NULL, all.files = FALSE,
            full.names = FALSE, recursive = FALSE,
            ignore.case = FALSE, include.dirs = FALSE, no.. = FALSE)
+
 
 for (i in 1:length(pessoas)) { 
   nome_arquivo <- paste(path, "\\", sep="")
@@ -17,7 +18,13 @@ for (i in 1:length(pessoas)) {
     caminho_completo <- paste(nome_arquivo, "\\", sep="")
     caminho_completo <- paste(caminho_completo, arquivos[j], sep="")
     dados_movimentos <- read.delim2(caminho_completo, header = TRUE, sep = "\t", dec = ",")
-    dados_movimentos
+    dados_movimentos$trial = c(1)
+    
+    dados_right = subset(dados_movimentos, select = c("RX", "RY", "trial", "T"))
+    names(dados_right) <- c("x", "y", "trial", "time")
+    dados_left  = subset(dados_movimentos, select = c("LX", "LY", "trial", "T"))
+    names(dados_left) <- c("x", "y", "trial", "time")
+    
   }
 }
 
