@@ -15,21 +15,40 @@ for (i in 1:length(pessoas)) {
   nome_arquivo <- paste(nome_arquivo, pessoas[i],sep="")
   arquivos <- list.files(path = nome_arquivo)
   for (j in 1:length(arquivos)) {
+    # Primeiro, lemos os dados do arquivo
     caminho_completo <- paste(nome_arquivo, "\\", sep="")
     caminho_completo <- paste(caminho_completo, arquivos[j], sep="")
     dados_movimentos <- read.delim2(caminho_completo, header = TRUE, sep = "\t", dec = ",")
     dados_movimentos$trial = c(1)
     
+    # Em seguida, extraimos as informações do movimento do olho direito
     dados_right = subset(dados_movimentos, select = c("RX", "RY", "trial", "T"))
     names(dados_right) <- c("x", "y", "trial", "time")
+    # Detectamos as fixações do olho DIREITO
     fixations_right = detect.fixations(dados_right)
     
-    
+    # As informações do olho esquerdo
     dados_left  = subset(dados_movimentos, select = c("LX", "LY", "trial", "T"))
     names(dados_left) <- c("x", "y", "trial", "time")
-    fixations_left = detect.fixations(dados_right)
+    # Detectamos as fixações do olho ESQUERDO
+    fixations_left = detect.fixations(dados_right, lambda = 5, smooth.coordinates = FALSE, smooth.saccades = FALSE)
+    
+    # Plotamos os dados do olho esquerdo e as fixações do olho esquerdo
     diagnostic.plot(dados_left, fixations_left)    
-
+  
+    print(cat("Fixations collected from user: ", nome_arquivo))
+    
+    # Calculates summary statistics about the trials and fixations in the given data frame
+    # Calculates the number of trials, the average duration of trials, the average number of fixations in
+    # trials, the average duration of the fixations, the average spatial dispersion in the fixations, and the
+    # average peak velocity that occurred during fixations. Where appropriate standard deviations are
+    # given as well. Use round to obtain a more readable version of the resulting data frame.
+    
+    print(calculate.summary(fixations_left))
+  
+    break;
+    # Uncomment to see all graph
   }
+  break;
 }
 
